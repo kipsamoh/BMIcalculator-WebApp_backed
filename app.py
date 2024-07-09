@@ -3,14 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
-from flask_migrate import Migrate
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Necessary for flash messages to work
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bmicare.db'
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 admin = Admin(app, name='BMICare Admin', template_mode='bootstrap3')
@@ -42,7 +40,7 @@ class ContactMessage(db.Model):
 # Admin views
 class AdminModelView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.is_admin
 
 # Register admin views
 admin.add_view(AdminModelView(User, db.session))
@@ -184,6 +182,7 @@ def register():
     
     return render_template('register.html')
 
+# Route for user dashboard
 @app.route('/dashboard')
 @login_required
 def dashboard():
