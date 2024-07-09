@@ -16,12 +16,13 @@ login_manager.login_view = 'login'
 admin = Admin(app, name='BMICare Admin', template_mode='bootstrap3')
 
 # User model
+# User model
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=False)  # Admin field added
     bmi_history = db.relationship('BMIHistory', backref='user', lazy=True)
     contact_messages = db.relationship('ContactMessage', backref='user', lazy=True)
 
@@ -182,7 +183,6 @@ def register():
             flash('Username already exists. Please choose a different one.', 'error')
     
     return render_template('register.html')
-
 
 # Route for logout
 @app.route('/logout')
