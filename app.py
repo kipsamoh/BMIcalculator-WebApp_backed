@@ -42,7 +42,7 @@ class ContactMessage(db.Model):
 # Admin views
 class AdminModelView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_admin
+        return current_user.is_authenticated
 
 # Register admin views
 admin.add_view(AdminModelView(User, db.session))
