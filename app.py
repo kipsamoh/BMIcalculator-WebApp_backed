@@ -144,7 +144,6 @@ def contact():
         return redirect(url_for('contact'))
     return render_template('contact.html')
 
-# Route for login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -155,7 +154,7 @@ def login():
         if user and user.password == password:
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('home'))
+            return redirect(url_for('dashboard'))
         else:
             flash('Wrong credentials! Please try again.', 'error')
     
