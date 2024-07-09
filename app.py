@@ -184,6 +184,14 @@ def register():
     
     return render_template('register.html')
 
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    bmi_history = BMIHistory.query.filter_by(user_id=current_user.id).all()
+    contact_messages = ContactMessage.query.filter_by(user_id=current_user.id).all()
+
+    return render_template('dashboard.html', bmi_history=bmi_history, contact_messages=contact_messages)
+
 # Route for logout
 @app.route('/logout')
 @login_required
