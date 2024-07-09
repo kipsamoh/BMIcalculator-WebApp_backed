@@ -159,7 +159,7 @@ def login():
         else:
             flash('Wrong credentials! Please try again.', 'error')
     
-    return render_template('dashbord.html')
+    return render_template('login.html')
 
 # Route for register page
 @app.route('/register', methods=['GET', 'POST'])
