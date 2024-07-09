@@ -9,7 +9,7 @@
     <nav>
         <a href="{{ url_for('home') }}">Home</a>
         <a href="{{ url_for('health_fitness_blogs') }}">Health & Fitness Blogs</a>
-        <a href="{{ url_for('about') }}">About</a>
+        <!-- Remove the About link -->
         <a href="{{ url_for('contact') }}">Contact</a>
         {% if current_user.is_authenticated %}
             <a href="{{ url_for('logout') }}">Logout</a>
