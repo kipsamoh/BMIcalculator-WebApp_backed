@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="bmi-calculator">
+    <h2>BMI Calculator</h2>
+    <form action="{{ url_for('calculate_bmi') }}" method="post">
+        <label for="height">Height (m):</label>
+        <input type="number" id="height" name="height" step="0.01" required>
+
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" step="0.1" required>
+
+        <button type="submit">Calculate BMI</button>
+    </form>
+    {% if bmi_result %}
+    <p>Your BMI is: {{ bmi_result|round(2) }}</p>
+    <p>Category: {{ bmi_category }}</p>
+    <p>Recommendation: {{ bmi_recommendation }}</p>
+    {% endif %}
+</section>
+
+<section id="about-bmi">
+    <h2>About Body Mass Index (BMI)</h2>
+    <h3>What is BMI?</h3>
+    <p>Body Mass Index (BMI) is a widely used tool to estimate body fat by measuring the ratio of height to weight. It helps assess the risk for various health conditions. While useful, BMI is not always a precise indicator of body fat.</p>
+
+    <h3>How is BMI Calculated?</h3>
+    <p>BMI is calculated by dividing weight in kilograms by the square of height in meters (kg/m²). Generally, a higher BMI suggests more body fat, but it doesn’t always accurately represent body composition for everyone.</p>
+
+    <h3>BMI Classifications:</h3>
+    <ul>
+        <li>Underweight: Less than 18.5</li>
+        <li>Normal weight: 18.5 to 24.9</li>
+        <li>Overweight: 25 to 29.9</li>
+        <li>Obesity Class I: 30 to 34.9</li>
+        <li>Obesity Class II: 35 to 39.9</li>
+        <li>Obesity Class III: 40 and above</li>
+    </ul>
+
+    <h3>Uses of BMI:</h3>
+    <p>Healthcare providers use BMI to diagnose weight categories and as a screening tool for health risks. High body fat can lead to heart disease, diabetes, and other conditions, while low body fat may be associated with malnutrition and weakened immunity.</p>
+
+    <h3>Limitations of BMI:</h3>
+    <ul>
+        <li>BMI does not distinguish between muscle and fat.</li>
+        <li>It uses the same chart for both males and females, despite differences in body fat distribution.</li>
+        <li>BMI may not be accurate for athletes, children, the elderly, and pregnant individuals.</li>
+    </ul>
+
+    <h3>Health Risks Associated with BMI:</h3>
+    <ul>
+        <li>Underweight: Malnutrition, anemia, weakened immune system, osteoporosis.</li>
+        <li>Overweight/Obesity: Heart disease, high blood pressure, type 2 diabetes, certain cancers, and mental health issues.</li>
+    </ul>
+
+    <h3>Calculation Example:</h3>
+    <p>To calculate BMI:</p>
+    <ul>
+        <li>Multiply your weight in pounds by 703.</li>
+        <li>Divide by your height in inches twice.</li>
+    </ul>
+    <p>For instance, a person weighing 180 lbs and 5 feet 5 inches tall (65 inches) has a BMI of 29.9.</p>
+
+    <h3>Conclusion:</h3>
+    <p>While BMI is a useful tool for quick assessment, it should not be the sole measure of health. Consult healthcare providers for a comprehensive health evaluation.</p>
+</section>
+{% endblock %}

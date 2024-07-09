@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="health-fitness-blogs">
+    <h2>Health & Fitness Blogs</h2>
+    {% for post in posts %}
+    <article>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}

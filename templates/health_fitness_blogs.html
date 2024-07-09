@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section id="blog-posts">
+    <h2>Health & Fitness Blogs</h2>
+    {% for post in posts %}
+    <article class="blog-post">
+        <h3>{{ post.title }}</h3>
+        <p><small>{{ post.date }} - {{ post.author }}</small></p>
+        <div class="blog-content">
+            {{ post.content|safe }}
+        </div>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}
