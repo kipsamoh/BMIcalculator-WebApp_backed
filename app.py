@@ -1,13 +1,45 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Necessary for flash messages to work
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bmicare.db'
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+admin = Admin(app, name='BMICare Admin', template_mode='bootstrap3')
 
-# Dummy users for login (replace with actual authentication logic)
-users = {
-    'user1': {'username': 'user1', 'password': 'password1'},
-    'user2': {'username': 'user2', 'password': 'password2'}
-}
+# User model
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    bmi_history = db.relationship('BMIHistory', backref='user', lazy=True)
+    contact_messages = db.relationship('ContactMessage', backref='user', lazy=True)
+
+# BMIHistory model
+class BMIHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    bmi = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+# ContactMessage model
+class ContactMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.Text, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+# Admin views
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(BMIHistory, db.session))
+admin.add_view(ModelView(ContactMessage, db.session))
 
 # Route for home page
 @app.route('/')
@@ -33,6 +65,11 @@ def calculate_bmi():
     else:
         category = 'Obese'
         recommendation = 'It is advisable to consult a healthcare provider for guidance on achieving a healthier weight.'
+
+    if current_user.is_authenticated:
+        bmi_record = BMIHistory(bmi=bmi, user_id=current_user.id)
+        db.session.add(bmi_record)
+        db.session.commit()
 
     return render_template('index.html', bmi_result=bmi, bmi_category=category, bmi_recommendation=recommendation)
 
@@ -92,7 +129,11 @@ def health_fitness_blogs():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        # Process form data (you can add more here if needed)
+        message = request.form['message']
+        if current_user.is_authenticated:
+            contact_message = ContactMessage(message=message, user_id=current_user.id)
+            db.session.add(contact_message)
+            db.session.commit()
         flash('Thank you for your message! We will get back to you soon.', 'success')
         return redirect(url_for('contact'))
     return render_template('contact.html')
@@ -104,7 +145,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        if username in users and users[username]['password'] == password:
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+            login_user(user)
             flash('Login successful!', 'success')
             return redirect(url_for('home'))
         else:
@@ -112,5 +155,16 @@ def login():
     
     return render_template('login.html')
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)
