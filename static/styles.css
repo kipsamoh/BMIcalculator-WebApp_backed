@@ -252,3 +252,22 @@ footer {
 .admin-button:hover {
     background-color: #c82333; /* Darker red on hover */
 }
+
+/* Custom styles for admin dashboard headers */
+#admin-dashboard h2 {
+    color: #dc3545; /* Red text for main heading */
+}
+
+#admin-dashboard .card h3 {
+    color: #007bff; /* Blue text for section headings */
+    margin-bottom: 1rem;
+}
+
+#admin-dashboard .card-body table th {
+    background-color: #007bff; /* Blue background for table headers */
+    color: #fff;
+}
+
+#admin-dashboard .list-group-item {
+    background-color: lightyellow; /* Light yellow background for list items */
+}
