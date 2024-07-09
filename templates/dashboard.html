@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<section id="dashboard">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title">BMI History</h2>
+                        {% if bmi_history %}
+                            <ul class="list-group">
+                                {% for bmi_record in bmi_history %}
+                                    <li class="list-group-item">
+                                        <strong>Date:</strong> {{ bmi_record.date.strftime('%Y-%m-%d %H:%M:%S') }}<br>
+                                        <strong>BMI:</strong> {{ bmi_record.bmi }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No BMI history available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Contact Messages</h2>
+                        {% if contact_messages %}
+                            <ul class="list-group">
+                                {% for message in contact_messages %}
+                                    <li class="list-group-item">
+                                        <strong>Date:</strong> {{ message.date.strftime('%Y-%m-%d %H:%M:%S') }}<br>
+                                        <strong>Message:</strong> {{ message.message }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No contact messages available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <!-- Any additional widgets or information can be placed here -->
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
