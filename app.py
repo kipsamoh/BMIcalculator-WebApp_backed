@@ -43,7 +43,11 @@ class ContactMessage(db.Model):
 # Admin views
 class AdminModelView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_admin
+        return True  # Temporarily grant access to all users (for development/testing purposes)
+
+admin.add_view(AdminModelView(User, db.session))
+admin.add_view(AdminModelView(BMIHistory, db.session))
+admin.add_view(AdminModelView(ContactMessage, db.session))
 
 admin.add_view(AdminModelView(User, db.session))
 admin.add_view(AdminModelView(BMIHistory, db.session))
