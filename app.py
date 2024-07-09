@@ -16,7 +16,6 @@ login_manager.login_view = 'login'
 admin = Admin(app, name='BMICare Admin', template_mode='bootstrap3')
 
 # User model
-# User model
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -43,11 +42,7 @@ class ContactMessage(db.Model):
 # Admin views
 class AdminModelView(ModelView):
     def is_accessible(self):
-        return True  # Temporarily grant access to all users (for development/testing purposes)
-
-admin.add_view(AdminModelView(User, db.session))
-admin.add_view(AdminModelView(BMIHistory, db.session))
-admin.add_view(AdminModelView(ContactMessage, db.session))
+        return current_user.is_authenticated
 
 admin.add_view(AdminModelView(User, db.session))
 admin.add_view(AdminModelView(BMIHistory, db.session))
@@ -204,4 +199,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
