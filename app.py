@@ -160,6 +160,7 @@ def login():
     
     return render_template('login.html')
 
+# Route for register page
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -179,11 +180,12 @@ def register():
     
     return render_template('register.html')
 
+# Route for logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'success')
+    flash('You have been logged out.', 'info')
     return redirect(url_for('home'))
 
 @login_manager.user_loader
@@ -191,6 +193,5 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
+    db.create_all()
     app.run(debug=True)
