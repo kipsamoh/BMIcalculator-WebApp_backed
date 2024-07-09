@@ -181,7 +181,7 @@ footer {
     border: 1px solid #f5c6cb;
 }
 
-/* Additional styling for login form */
+/* Additional styling for forms */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -206,6 +206,14 @@ footer {
 
 .btn-primary:hover {
     background-color: #0056b3;
+}
+
+.form-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
 }
 
 /* Responsive adjustments */
