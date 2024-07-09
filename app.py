@@ -169,10 +169,11 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        
+        is_admin = request.form.get('is_admin') == 'on'  # Check if checkbox is checked
+
         existing_user = User.query.filter_by(username=username).first()
         if existing_user is None:
-            user = User(username=username, email=email, password=password, is_admin=False)
+            user = User(username=username, email=email, password=password, is_admin=is_admin)
             db.session.add(user)
             db.session.commit()
             flash('Registration successful! You can now log in.', 'success')
@@ -181,6 +182,7 @@ def register():
             flash('Username already exists. Please choose a different one.', 'error')
     
     return render_template('register.html')
+
 
 # Route for logout
 @app.route('/logout')
