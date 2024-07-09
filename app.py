@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
     bmi_history = db.relationship('BMIHistory', backref='user', lazy=True)
     contact_messages = db.relationship('ContactMessage', backref='user', lazy=True)
 
@@ -37,9 +38,13 @@ class ContactMessage(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 # Admin views
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(BMIHistory, db.session))
-admin.add_view(ModelView(ContactMessage, db.session))
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin
+
+admin.add_view(AdminModelView(User, db.session))
+admin.add_view(AdminModelView(BMIHistory, db.session))
+admin.add_view(AdminModelView(ContactMessage, db.session))
 
 # Route for home page
 @app.route('/')
@@ -155,10 +160,30 @@ def login():
     
     return render_template('login.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user is None:
+            user = User(username=username, email=email, password=password, is_admin=False)
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful! You can now log in.', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash('Username already exists. Please choose a different one.', 'error')
+    
+    return render_template('register.html')
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
+    flash('You have been logged out.', 'success')
     return redirect(url_for('home'))
 
 @login_manager.user_loader
