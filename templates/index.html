@@ -2,49 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home - BMI Care</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Care</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <nav>
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('health_fitness_blogs') }}">Health & Fitness Blogs</a>
-        <!-- Remove the About link -->
-        <a href="{{ url_for('contact') }}">Contact</a>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
-        {% endif %}
-    </nav>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('health_fitness_blogs') }}">Health & Fitness Blogs</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <h1>Welcome to BMI Care</h1>
+    <main>
+        <section id="bmi-calculator">
+            <h2>BMI Calculator</h2>
+            <form action="{{ url_for('calculate_bmi') }}" method="POST">
+                <label for="height">Height (in meters):</label>
+                <input type="number" step="0.01" name="height" id="height" required>
 
-    <form method="POST" action="{{ url_for('calculate_bmi') }}">
-        <label for="height">Height (meters):</label>
-        <input type="text" id="height" name="height" required><br>
-        <label for="weight">Weight (kg):</label>
-        <input type="text" id="weight" name="weight" required><br>
-        <button type="submit">Calculate BMI</button>
-    </form>
+                <label for="weight">Weight (in kilograms):</label>
+                <input type="number" step="0.1" name="weight" id="weight" required>
 
-    {% if bmi_result %}
-        <h2>Your BMI: {{ bmi_result }}</h2>
-        <p>Category: {{ bmi_category }}</p>
-        <p>{{ bmi_recommendation }}</p>
-    {% endif %}
+                <button type="submit">Calculate BMI</button>
+            </form>
 
-    <div class="bmi-info">
-        <h2>About BMI</h2>
-        <p>BMI is a measure of body fat based on your weight in relation to your height. Here are the categories:</p>
-        <ul>
-            <li>Underweight: BMI less than 18.5</li>
-            <li>Normal weight: BMI 18.5–24.9</li>
-            <li>Overweight: BMI 25–29.9</li>
-            <li>Obesity: BMI 30 or greater</li>
-        </ul>
-        <p>Maintaining a healthy BMI is important for your overall health. Use our calculator to determine your BMI and get personalized health recommendations.</p>
-    </div>
+            {% if bmi_result %}
+                <p>Your BMI is: {{ bmi_result }}</p>
+                <p>Category: {{ bmi_category }}</p>
+                <p>Recommendation: {{ bmi_recommendation }}</p>
+            {% endif %}
+        </section>
+
+        <section id="about-bmi">
+            <h2>About BMI</h2>
+            <p>Body Mass Index (BMI) is a simple calculation using a person's height and weight. The formula is BMI = kg/m<sup>2</sup> where kg is a person's weight in kilograms and m<sup>2</sup> is their height in meters squared.</p>
+            <h3>BMI Categories:</h3>
+            <ul>
+                <li>Underweight: BMI less than 18.5</li>
+                <li>Normal weight: BMI 18.5–24.9</li>
+                <li>Overweight: BMI 25–29.9</li>
+                <li>Obesity: BMI 30 or greater</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 BMI Care. All rights reserved.</p>
+    </footer>
 </body>
 </html>
